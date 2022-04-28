@@ -124,12 +124,6 @@ const QuadrasList = () => {
               </label>{" "}
               {currentQuadra.description}
             </div>
-            <div>
-              <label>
-                <strong>Status:</strong>
-              </label>{" "}
-              {currentQuadra.published ? "Published" : "Pending"}
-            </div>
 
             <Link
               to={"/quadras/" + currentQuadra.id}
