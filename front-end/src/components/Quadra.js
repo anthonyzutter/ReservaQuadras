@@ -88,13 +88,13 @@ const Quadra = props => {
 
           </form>
 
-          <button className="badge badge-danger mr-2" onClick={deleteQuadra}>
+          <button className="btn btn-danger mr-2" onClick={deleteQuadra}>
             Deletar
           </button>
 
           <button
             type="submit"
-            className="badge badge-success"
+            className="btn btn-primary"
             onClick={updateQuadra}
           >
             Atualizar

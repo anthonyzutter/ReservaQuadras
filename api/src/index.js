@@ -10,13 +10,14 @@ app.use(express.json());
 
 app.use(cors())
 
-const quadras = [];
+let quadras = [];
 
 function verificarQuadraExistente(request, response, next) {
     const { id } = request.headers;
 
-    const quadra = quadras.find(q => q.id === id);
-    if (!quadra)
+    //const quadra = quadras.find(q => q.id === id);
+    const quadra = quadras.find(x => x.id === id);
+    if (quadra === "")
         return response.status(400).json({ message: "Quadra não encontrada." });
 
     request.quadra = quadra;
@@ -37,7 +38,9 @@ app.get("/quadras", (request, response) => {
 
 app.get("/quadras/:id", (request, response) => {
     const { id } = request.params;
-    return response.json({})
+    
+    const quadra = quadras.find(x => x.id.toString() === id.toString());
+    return response.json(quadra)
 });
 
 app.post("/quadras", (request, response) => {
@@ -62,23 +65,26 @@ app.post("/quadras", (request, response) => {
 
 app.put("/quadras/:id", verificarQuadraExistente, (request, response) => {
     const { name, description } = request.body;
-    const { quadra } = request;
+    const {id} = request.params;
 
+    let quadra = quadras.find(x => x.id.toString() === id.toString());
+    
     quadra.name = name;
     quadra.description = description;
 
-    const index = quadras.findIndex(q => q.id === quadra.id);
+    const index = quadras.findIndex(q => q.id === id);
     quadras[index] = quadra;
 
     return response.send();
 });
 
-app.delete("/quadras/:id", verificarQuadraExistente, (resquest, response) => {
+app.delete("/quadras/:id", verificarQuadraExistente, (request, response) => {
     const {id} = request.params;
 
-    quadras = quadras.filter((value, index, array)=> value.id !== id);
+    //quadras = quadras.filter((value, index, array)=> value.id !== id);
+    quadras = quadras.filter(x => x.id.toString() !== id.toString());
 
-    return response.send();
+    return response.status(200).send();
 })
 
 app.listen(3333);
