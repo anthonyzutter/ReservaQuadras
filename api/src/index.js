@@ -1,6 +1,5 @@
 const express = require("express");
 const { json } = require("express/lib/response");
-const { v4: uuidv4 } = require("uuid")
 const cors = require('cors')
 const { PrismaClient } = require('@prisma/client')
 
@@ -10,12 +9,17 @@ const app = express();
 
 app.use(express.json());
 
+
+
 app.use(cors())
 
-function verificarQuadraExistente(request, response, next) {
-    const { id } = request.headers;
+async function verificarQuadraExistente(request, response, next) {
+    const { id } = request.params;
 
-    const quadra = await prisma.quadras.findUnique({
+    if (!id)
+        return response.status(400).json({ message: "Usuário não encontrado." });
+
+    const quadra = await prisma.quadras.findFirst({
         where: {
             id: id
         }
@@ -29,7 +33,7 @@ function verificarQuadraExistente(request, response, next) {
     return next();
 }
 
-app.get("/quadras", (request, response) => {
+app.get("/quadras", async (request, response) => {
     const { name } = request.query;
 
     if (name) {
@@ -42,12 +46,21 @@ app.get("/quadras", (request, response) => {
         return response.json(quadraExistente)
     }
 
+    const quadras = await prisma.quadras.findMany();
+
     return response.json(quadras);
 });
 
-app.get("/quadras/:id", (request, response) => {
+app.get("/quadras/:id", async (request, response) => {
     const { id } = request.params;
-    return response.json({})
+
+    const quadra = await prisma.quadras.findUnique({
+        where: {
+            id: id
+        }
+    });
+
+    return response.json(quadra)
 });
 
 app.post("/quadras", async (request, response) => {
@@ -79,7 +92,7 @@ app.put("/quadras/:id", verificarQuadraExistente, async (request, response) => {
     const { name, description } = request.body;
     const { id } = request.params;
 
-    var result = await prisma.quadras.update({
+    await prisma.quadras.update({
         data: {
             name: name,
             description: description
@@ -87,7 +100,7 @@ app.put("/quadras/:id", verificarQuadraExistente, async (request, response) => {
         where: {
             id: id
         }
-    })
+    });
 
     return response.send();
 });
