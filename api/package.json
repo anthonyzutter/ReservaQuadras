@@ -7,7 +7,9 @@
     "dev": "nodemon src/index.js"
   },
   "dependencies": {
+    "@prisma/client": "^3.13.0",
     "express": "^4.17.3",
+    "prisma": "^3.13.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

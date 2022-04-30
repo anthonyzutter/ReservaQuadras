@@ -2,7 +2,9 @@ const express = require("express");
 const { json } = require("express/lib/response");
 const { v4: uuidv4 } = require("uuid")
 const cors = require('cors')
+const { PrismaClient } = require('@prisma/client')
 
+const prisma = new PrismaClient()
 
 const app = express();
 
@@ -10,12 +12,15 @@ app.use(express.json());
 
 app.use(cors())
 
-const quadras = [];
-
 function verificarQuadraExistente(request, response, next) {
     const { id } = request.headers;
 
-    const quadra = quadras.find(q => q.id === id);
+    const quadra = await prisma.quadras.findUnique({
+        where: {
+            id: id
+        }
+    });
+
     if (!quadra)
         return response.status(400).json({ message: "Quadra não encontrada." });
 
@@ -28,8 +33,13 @@ app.get("/quadras", (request, response) => {
     const { name } = request.query;
 
     if (name) {
-        const quadra = quadras.find(q => q.name === name);
-        return response.json(quadra)
+        const quadraExistente = await prisma.quadras.findFirst({
+            where: {
+                name: name
+            }
+        });
+
+        return response.json(quadraExistente)
     }
 
     return response.json(quadras);
@@ -40,43 +50,56 @@ app.get("/quadras/:id", (request, response) => {
     return response.json({})
 });
 
-app.post("/quadras", (request, response) => {
-    const id = uuidv4();
+app.post("/quadras", async (request, response) => {
     const { name, description } = request.body;
 
     if (!name)
         return response.status(400).json({ message: "Nome da quadra é obrigatório." });
 
-    const quadraExistente = quadras.some((quadra) => quadra.name === name);
+    const quadraExistente = await prisma.quadras.findFirst({
+        where: {
+            name: name
+        }
+    });
+
     if (quadraExistente)
         return response.status(400).json({ message: "Nome já cadastrado para uma quadra." });
 
-    quadras.push({
-        id,
-        name,
-        description
+    await prisma.quadras.create({
+        data: {
+            name: name,
+            description: description
+        }
     });
 
     return response.status(201).send();
 });
 
-app.put("/quadras/:id", verificarQuadraExistente, (request, response) => {
+app.put("/quadras/:id", verificarQuadraExistente, async (request, response) => {
     const { name, description } = request.body;
-    const { quadra } = request;
+    const { id } = request.params;
 
-    quadra.name = name;
-    quadra.description = description;
-
-    const index = quadras.findIndex(q => q.id === quadra.id);
-    quadras[index] = quadra;
+    var result = await prisma.quadras.update({
+        data: {
+            name: name,
+            description: description
+        },
+        where: {
+            id: id
+        }
+    })
 
     return response.send();
 });
 
-app.delete("/quadras/:id", verificarQuadraExistente, (resquest, response) => {
-    const {id} = request.params;
+app.delete("/quadras/:id", verificarQuadraExistente, async (request, response) => {
+    const { id } = request.params;
 
-    quadras = quadras.filter((value, index, array)=> value.id !== id);
+    await prisma.quadras.delete({
+        where: {
+            id: id
+        }
+    });
 
     return response.send();
 })
