@@ -43,7 +43,7 @@ app.get("/quadras", async (request, response) => {
             }
         });
 
-        return response.json(quadraExistente)
+        return response.json([quadraExistente]);
     }
 
     const quadras = await prisma.quadras.findMany();

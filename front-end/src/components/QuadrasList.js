@@ -101,7 +101,7 @@ const QuadrasList = () => {
             ))}
         </ul>
 
-       {/*  <button
+        {/*  <button
           className="m-3 btn btn-sm btn-danger"
           onClick={removeAllQuadras}
         >
@@ -127,7 +127,7 @@ const QuadrasList = () => {
 
             <Link
               to={"/quadras/" + currentQuadra.id}
-              className="badge badge-warning"
+              className="btn btn-primary"
             >
               Editar
             </Link>
