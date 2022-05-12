@@ -131,6 +131,7 @@ const QuadrasList = () => {
             >
               Editar
             </Link>
+            <a href={"https://wa.me/" + currentQuadra.phone} className="btn btn-success" target="_blank">Reservar</a>
           </div>
         ) : (
           <div>

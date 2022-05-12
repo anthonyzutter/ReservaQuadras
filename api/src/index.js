@@ -64,7 +64,7 @@ app.get("/quadras/:id", async (request, response) => {
 });
 
 app.post("/quadras", async (request, response) => {
-    const { name, description } = request.body;
+    const { name, description, phone } = request.body;
 
     if (!name)
         return response.status(400).json({ message: "Nome da quadra é obrigatório." });
@@ -81,7 +81,8 @@ app.post("/quadras", async (request, response) => {
     await prisma.quadras.create({
         data: {
             name: name,
-            description: description
+            description: description,
+            phone: phone
         }
     });
 
@@ -89,13 +90,14 @@ app.post("/quadras", async (request, response) => {
 });
 
 app.put("/quadras/:id", verificarQuadraExistente, async (request, response) => {
-    const { name, description } = request.body;
+    const { name, description, phone } = request.body;
     const { id } = request.params;
 
     await prisma.quadras.update({
         data: {
             name: name,
-            description: description
+            description: description,
+            phone: phone
         },
         where: {
             id: id

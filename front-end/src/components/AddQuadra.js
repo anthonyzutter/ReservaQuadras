@@ -6,7 +6,7 @@ const AddQuadra = () => {
     id: null,
     name: "",
     description: "",
-    
+    phone: ""
   };
   const [quadra, setQuadra] = useState(initialQuadraState);
   const [submitted, setSubmitted] = useState(false);
@@ -19,7 +19,8 @@ const AddQuadra = () => {
   const saveQuadra = () => {
     var data = {
       name: quadra.name,
-      description: quadra.description
+      description: quadra.description,
+      phone: quadra.phone
     };
 
     QuadraDataService.create(data)
@@ -28,6 +29,7 @@ const AddQuadra = () => {
           id: response.data.id,
           name: response.data.name,
           description: response.data.description,
+          phone: response.data.phone
         });
         setSubmitted(true);
         console.log(response.data);
@@ -76,6 +78,19 @@ const AddQuadra = () => {
               value={quadra.description}
               onChange={handleInputChange}
               name="description"  
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="phone">Celular</label>
+            <input
+              type="text"
+              className="form-control"
+              id="phone"
+              required
+              value={quadra.phone}
+              onChange={handleInputChange}
+              name="phone"  
             />
           </div>
 

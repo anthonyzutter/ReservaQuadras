@@ -10,6 +10,7 @@ const Quadra = props => {
     id: null,
     name: "",
     description: "",
+    phone: ""
   };
   const [currentQuadra, setCurrentQuadra] = useState(initialQuadraState);
   const [message, setMessage] = useState("");
@@ -82,6 +83,17 @@ const Quadra = props => {
                 id="description"
                 name="description"
                 value={currentQuadra.description}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="phone">Celular</label>
+              <input
+                type="text"
+                className="form-control"
+                id="phone"
+                name="phone"
+                value={currentQuadra.phone}
                 onChange={handleInputChange}
               />
             </div>
