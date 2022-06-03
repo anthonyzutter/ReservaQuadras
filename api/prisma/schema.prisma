@@ -10,10 +10,56 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Quadras {
-  id          String  @id @default(uuid())
-  name        String  @unique
-  description String?
+model Usuario {
+  id             String   @id @default(uuid()) // ID
+  documento      String   @unique
+  name           String
+  email          String
+  dataNascimento DateTime
+  celular        String?
 
-  @@map("quadras")
+  @@map("usuarios")
+}
+
+model Evento {
+  id               String   @id @default(uuid()) // ID
+  nome             String
+  descricao        String?
+  capacidadeMaxima Int
+  dataHoraInicio   DateTime
+  dataHoraFinal    DateTime
+  idUsuario        String // ID Usuário anfitrião
+  idLocal          String // ID Local do evento 
+
+  @@map("eventos")
+}
+
+model Local {
+  id          String  @id @default(uuid()) // ID
+  logradouro  String
+  bairro      String
+  numero      String
+  complemento String?
+  cidade      String
+  uf          String
+
+  @@map("localidades")
+}
+
+model Participante {
+  id           String   @id @default(uuid()) // ID
+  idEvento     String
+  idUsuario    String
+  dataCadastro DateTime
+
+  @@map("participantes")
+}
+
+model ListaEspera {
+  id           String   @id @default(uuid()) // ID
+  idEvento     String
+  idUsuario    String
+  dataCadastro DateTime
+
+  @@map("listaEspera")
 }
