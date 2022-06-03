@@ -29,12 +29,12 @@ model Evento {
   dataHoraInicio   DateTime
   dataHoraFinal    DateTime
   idUsuario        String // ID Usuário anfitrião
-  idLocal          String // ID Local do evento 
+  idEndereco       String // ID Endereco do evento 
 
   @@map("eventos")
 }
 
-model Local {
+model Endereco {
   id          String  @id @default(uuid()) // ID
   logradouro  String
   bairro      String
