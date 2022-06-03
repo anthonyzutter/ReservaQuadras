@@ -43,7 +43,7 @@ model Endereco {
   cidade      String
   uf          String
 
-  @@map("localidades")
+  @@map("enderecos")
 }
 
 model Participante {
